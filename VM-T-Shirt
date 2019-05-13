@@ -1,0 +1,48 @@
+ - name: Create VMs
+      ovirt_vms:
+        auth: "{{ ovirt_auth }}"
+        cluster: Default
+        template: RHEL-7.5-Guest
+        name: "{{ item.name }}"
+        state: running
+        instance_type: "{{ item.size }}"
+        nics:
+          - name: nic1
+            profile_name: ovirtmgmt
+        cloud_init:
+          host_name: "{{ item.name }}.supermicro.com"
+          user_name: root
+          root_password: redhat
+          nic_name: eth0
+          nic_on_boot: true
+          nic_boot_protocol: dhcp
+
+          custom_script: |
+            runcmd:
+              - hostnamectl set-hostname {{ item.name }}.supermicro.com
+              - yum -y remove cloud-init
+        wait: true
+      with_items:
+         - {"name": "vm01", "size": "Tiny"}
+         - {"name": "vm02", "size": "Tiny"}
+         - {"name": "vm03", "size": "Tiny"}
+         
+         - hosts: localhost
+  connection: local
+  vars:
+    vms:
+      - {"name": "vm1", "size": "small"}
+      - {"name": "vm2", "size": "large"}
+  tasks:
+  - name: print name and size
+    debug:
+      msg: VM name is {{ item.name }} and size is {{ item.size }}
+    with_items: "{{ vms }}"
+    
+    TASK [print name and size] ***********************************************************************************************************************************
+ok: [localhost] => (item={'name': 'vm1', 'size': 'small'}) => {
+    "msg": "VM name is vm1 and size is small"
+}
+ok: [localhost] => (item={'name': 'vm2', 'size': 'large'}) => {
+    "msg": "VM name is vm2 and size is large"
+}
