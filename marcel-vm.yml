@@ -16,7 +16,7 @@
       ovirt_vms:
         auth: "{{ ovirt_auth }}"
         cluster: Default
-        template: RHEL-7.6
+        template: RHEL7.6
         name: "{{ item }}"
         state: running
         instance_type: Tiny
