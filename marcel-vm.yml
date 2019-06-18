@@ -13,7 +13,7 @@
         password: redhat
 
     - name: Create VMs
-      ovirt_vms:
+      ovirt_vm:
         auth: "{{ ovirt_auth }}"
         cluster: Default
         template: RHEL7.6_Setup
